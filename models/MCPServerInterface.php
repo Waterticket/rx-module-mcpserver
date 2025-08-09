@@ -1,6 +1,6 @@
 <?php
 
-namespace Rhymix\Modules\Mcpserver\Mcp;
+namespace Rhymix\Modules\Mcpserver\Models;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 

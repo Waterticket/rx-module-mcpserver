@@ -2,8 +2,11 @@
 
 namespace Rhymix\Modules\Mcpserver\Models;
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use ModuleController;
 use ModuleModel;
+use Psr\Log\LogLevel;
 
 /**
  * MCP Server
@@ -32,6 +35,30 @@ class Config
 		if (self::$_cache === null)
 		{
 			self::$_cache = ModuleModel::getModuleConfig('mcpserver') ?: new \stdClass;
+
+			if (!isset(self::$_cache->serverName)) self::$_cache->serverName = 'MCP Server';
+			if (!isset(self::$_cache->serverVersion)) self::$_cache->serverVersion = '1.0.0';
+
+			if (!isset(self::$_cache->serverHost)) self::$_cache->serverHost = '127.0.0.1';
+			if (!isset(self::$_cache->serverPort)) self::$_cache->serverPort = 8080;
+			if (!isset(self::$_cache->mcpPath)) self::$_cache->mcpPath = '/mcp';
+
+			if (!isset(self::$_cache->mcpEnableJsonResponse)) self::$_cache->mcpEnableJsonResponse = false;
+			if (!isset(self::$_cache->mcpStateless)) self::$_cache->mcpStateless = false;
+
+			if (!isset(self::$_cache->printLog)) self::$_cache->printLog = true;
+			if (!isset(self::$_cache->printLogLevels)) {
+				self::$_cache->printLogLevels = [
+					LogLevel::EMERGENCY => true,
+					LogLevel::ALERT => true,
+					LogLevel::CRITICAL => true,
+					LogLevel::ERROR => true,
+					LogLevel::WARNING => true,
+					LogLevel::NOTICE => true,
+					LogLevel::INFO => true,
+					LogLevel::DEBUG => true,
+				];
+			}
 		}
 		return self::$_cache;
 	}

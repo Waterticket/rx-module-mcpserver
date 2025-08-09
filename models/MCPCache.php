@@ -14,8 +14,8 @@ use Psr\SimpleCache\CacheInterface;
  */
 class MCPCache implements CacheInterface
 {
-    private static $cache_prefix = 'mcpcache';
-    private static $instance = null;
+    private static string $cache_prefix = 'mcpcache';
+    private static ?MCPCache $instance = null;
 
 	/**
      * Fetches a value from the cache.
@@ -49,6 +49,12 @@ class MCPCache implements CacheInterface
      */
     public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool
     {
+        if ($ttl instanceof \DateInterval) {
+            $ttl = $ttl->s + ($ttl->i * 60) + ($ttl->h * 3600) + ($ttl->d * 86400);
+        } elseif (is_null($ttl)) {
+            $ttl = 0; // No expiration
+        }
+
         return RhymixCache::set(self::$cache_prefix . ':' . $key, $value, $ttl);
     }
 
@@ -165,7 +171,7 @@ class MCPCache implements CacheInterface
         return RhymixCache::exists(self::$cache_prefix . ':' . $key);
     }
 
-    public static function getInstance(): MCPCache
+    public static function getInstance(object $config): MCPCache
     {
         if (self::$instance === null) {
             self::$instance = new self();

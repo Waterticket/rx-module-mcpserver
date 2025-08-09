@@ -1,6 +1,6 @@
 <?php
 
-use Rhymix\Modules\Mcpserver\Mcp\MCPServerInterface;
+use Rhymix\Modules\Mcpserver\Models\MCPServerInterface;
 use PhpMcp\Server\Attributes\McpTool;
 use PhpMcp\Server\Attributes\Schema;
 
