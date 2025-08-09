@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+	<grants>
+	</grants>
+	<actions>
+		<!-- 관리자 액션 -->
+		<action name="dispMcpserverAdminConfig" class="Controllers\Admin" menu-name="mcpserver" admin-index="true" />
+		<action name="procMcpserverAdminInsertConfig" class="Controllers\Admin" />
+	</actions>
+	<!-- 이벤트 핸들러 (트리거) 선언 -->
+	<eventHandlers>
+	</eventHandlers>
+	<menus>
+		<menu name="mcpserver" type="all">
+			<title xml:lang="ko">MCP Server</title>
+		</menu>
+	</menus>
+</module>
