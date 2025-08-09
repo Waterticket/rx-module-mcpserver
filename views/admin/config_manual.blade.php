@@ -33,7 +33,11 @@ Description=Rhymix MCP Server Service
 [Service]
 ExecStart=/usr/bin/php {!! $run_script_path !!} 
 
-User={$user_info['name']}</code></pre>
+User={$user_info['name']}
+
+
+[Install]
+WantedBy=multi-user.target</code></pre>
 				<p class="mss-instruction">
 					 아래의 명령을 실행하고, 정상 작동하는지 모니터링하십시오. 
 				</p>
@@ -62,7 +66,7 @@ systemctl enable rhymix-mcpserver</code></pre>
     ...
 
     # MCP setting start
-    location ^~ {{ '/' . ltrim($config->mcpPath, '/') . '/' }} {
+    location ~ ^/{{ ltrim($config->mcpPath, '/') }}(?:/|$) {
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -77,7 +81,7 @@ systemctl enable rhymix-mcpserver</code></pre>
         proxy_cache off;
         @endif
 
-        proxy_pass http://{{ $config->serverHost }}:{{ $config->serverPort }}/;
+        proxy_pass http://{{ $config->serverHost }}:{{ $config->serverPort }};
     }
     # MCP setting end
 
