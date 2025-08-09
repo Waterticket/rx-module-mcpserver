@@ -6,6 +6,7 @@ use Rhymix\Framework\Cache;
 use Rhymix\Framework\DB;
 use Rhymix\Framework\Exception;
 use Rhymix\Framework\Storage;
+use Rhymix\Framework\Request;
 use Rhymix\Modules\Mcpserver\Models\Config as ConfigModel;
 use BaseObject;
 use Context;
@@ -118,5 +119,35 @@ class Admin extends Base
 		// 설정 화면으로 리다이렉트
 		$this->setMessage('success_registed');
 		$this->setRedirectUrl(Context::get('success_return_url'));
+	}
+
+	public function procMcpserverAdminTestLocalConnection()
+	{
+		$config = ConfigModel::getConfig();
+
+		$host = $config->serverHost;
+		$port = $config->serverPort;
+		$mcpPath = $config->mcpPath;
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "http://$host:$port$mcpPath");
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, [
+			'Accept: application/json',
+			'Content-Type: application/json',
+		]);
+
+		curl_exec($ch);
+
+		// if timeout or connection error
+		if (curl_errno($ch)) {
+			$error = curl_error($ch);
+			curl_close($ch);
+			return new BaseObject(-1, 'connection_failed');
+		}
+
+		curl_close($ch);
+		return new BaseObject();
 	}
 }

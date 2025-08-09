@@ -44,6 +44,42 @@ WantedBy=multi-user.target</code></pre>
 				<pre><code>systemctl daemon-reload
 systemctl start rhymix-mcpserver.service
 systemctl enable rhymix-mcpserver.service</code></pre>
+
+                <p class="mss-instruction">
+                    서비스 상태를 확인하려면 다음 명령을 사용하세요:
+                </p>
+                <pre><code>systemctl status rhymix-mcpserver.service</code></pre>
+
+                <p class="mss-instruction">
+                    로그를 확인하려면 다음 명령을 사용하세요:
+                </p>
+                <pre><code>journalctl -u rhymix-mcpserver.service -f</code></pre>
+
+                <p class="mss-instruction">
+                    <a href="javascript:void(0);" class="x_btn x_btn-primary" id="testLocalConnection">서버 실행여부 테스트</a>
+                </p>
+                <script>
+                    $('#testLocalConnection').on('click', function() {
+                        if (!confirm('서버가 실행중인지 확인하시겠습니까?')) {
+                            return;
+                        }
+
+                        $(this).prop('disabled', true).text('테스트 중...');
+
+                        $.post('./', {
+                            module: 'mcpserver',
+                            act: 'procMcpserverAdminTestLocalConnection'
+                        }, function(response) {
+                            if (response.error === 0) {
+                                alert('로컬 연결 테스트가 성공적으로 완료되었습니다.');
+                            } else {
+                                alert('로컬 연결 테스트에 실패했습니다: ' + response.message);
+                            }
+
+                            $('#testLocalConnection').prop('disabled', false).text('서버 실행여부 테스트');
+                        }, 'json');
+                    });
+                </script>
 			</div>
 		</div>
 	</section>
@@ -91,6 +127,10 @@ systemctl enable rhymix-mcpserver.service</code></pre>
 					 아래의 명령을 실행하고, 정상 작동하는지 모니터링하십시오. 
 				</p>
 				<pre><code>systemctl reload nginx</code></pre>
+
+                <p class="mss-instruction">
+                    <a href="{{ rtrim(\Context::getRequestUri(), '/') }}/{{ ltrim($config->mcpPath, '/') }}" target="_blank">외부접속 가능여부 확인</a>
+                </p>
 			</div>
 		</div>
 	</section>
