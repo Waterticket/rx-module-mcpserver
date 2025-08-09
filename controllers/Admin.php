@@ -9,6 +9,7 @@ use Rhymix\Framework\Storage;
 use Rhymix\Modules\Mcpserver\Models\Config as ConfigModel;
 use BaseObject;
 use Context;
+use Psr\Log\LogLevel;
 
 /**
  * MCP Server
@@ -44,7 +45,7 @@ class Admin extends Base
 	}
 
 	/**
-	 * 관리자 설정 저장 액션 예제
+	 * 관리자 설정 저장 액션
 	 */
 	public function procMcpserverAdminInsertConfig()
 	{
@@ -54,15 +55,48 @@ class Admin extends Base
 		// 제출받은 데이터 불러오기
 		$vars = Context::getRequestVars();
 
-		// 제출받은 데이터를 각각 적절히 필터링하여 설정 변경
-		if (in_array($vars->example_config, ['Y', 'N']))
+		// 서버 기본 설정
+		if (isset($vars->serverName) && trim($vars->serverName))
 		{
-			$config->example_config = $vars->example_config;
+			$config->serverName = trim($vars->serverName);
 		}
-		else
+		if (isset($vars->serverVersion) && trim($vars->serverVersion))
 		{
-			return new BaseObject(-1, '설정값이 이상함');
+			$config->serverVersion = trim($vars->serverVersion);
 		}
+
+		// 서버 연결 설정
+		if (isset($vars->serverHost) && trim($vars->serverHost))
+		{
+			$config->serverHost = trim($vars->serverHost);
+		}
+		if (isset($vars->serverPort) && is_numeric($vars->serverPort))
+		{
+			$config->serverPort = (int)$vars->serverPort;
+		}
+		if (isset($vars->mcpPath) && trim($vars->mcpPath))
+		{
+			$config->mcpPath = trim($vars->mcpPath);
+		}
+
+		// MCP 옵션 설정
+		$config->mcpEnableJsonResponse = ($vars->mcpEnableJsonResponse === 'Y');
+		$config->mcpStateless = ($vars->mcpStateless === 'Y');
+
+		// 로그 설정
+		$config->printLog = ($vars->printLog === 'Y');
+		
+		// 로그 레벨 설정
+		$config->printLogLevels = [
+			LogLevel::EMERGENCY => ($vars->logLevel_emergency === 'Y'),
+			LogLevel::ALERT => ($vars->logLevel_alert === 'Y'),
+			LogLevel::CRITICAL => ($vars->logLevel_critical === 'Y'),
+			LogLevel::ERROR => ($vars->logLevel_error === 'Y'),
+			LogLevel::WARNING => ($vars->logLevel_warning === 'Y'),
+			LogLevel::NOTICE => ($vars->logLevel_notice === 'Y'),
+			LogLevel::INFO => ($vars->logLevel_info === 'Y'),
+			LogLevel::DEBUG => ($vars->logLevel_debug === 'Y'),
+		];
 
 		// 변경된 설정을 저장
 		$output = ConfigModel::setConfig($config);
