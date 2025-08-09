@@ -43,7 +43,7 @@ class Config
 			if (!isset(self::$_cache->serverPort)) self::$_cache->serverPort = 8080;
 			if (!isset(self::$_cache->mcpPath)) self::$_cache->mcpPath = '/mcp';
 
-			if (!isset(self::$_cache->mcpEnableJsonResponse)) self::$_cache->mcpEnableJsonResponse = false;
+			if (!isset(self::$_cache->mcpSSEEnable)) self::$_cache->mcpSSEEnable = true;
 			if (!isset(self::$_cache->mcpStateless)) self::$_cache->mcpStateless = false;
 
 			if (!isset(self::$_cache->printLog)) self::$_cache->printLog = true;

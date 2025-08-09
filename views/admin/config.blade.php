@@ -1,17 +1,4 @@
-@load('config.scss')
-@load('config.js')
-
-{{-- 템플릿 v2 문법은 https://rhymix.org/manual/theme/template_v2 참고하세요 --}}
-
-<div class="x_page-header">
-	<h1>{{ $lang->cmd_mcpserver }}</h1>
-</div>
-
-<ul class="x_nav x_nav-tabs">
-	<li @class(['x_active' => $act === 'dispMcpserverAdminConfig'])>
-		<a href="@url(['module' => 'admin', 'act' => 'dispMcpserverAdminConfig'])">서버 설정</a>
-	</li>
-</ul>
+@include('header')
 
 <form class="x_form-horizontal" action="./" method="post" id="mcpserver">
 	<input type="hidden" name="module" value="mcpserver" />
@@ -82,11 +69,11 @@
 		<h1>MCP 옵션</h1>
 		
 		<div class="x_control-group">
-			<label class="x_control-label" for="mcpEnableJsonResponse">SSE 활성화</label>
+			<label class="x_control-label" for="mcpSSEEnable">SSE 활성화</label>
 			<div class="x_controls">
-				<select name="mcpEnableJsonResponse" id="mcpEnableJsonResponse">
-					<option value="N" @selected(!($config->mcpEnableJsonResponse ?? false))>활성화</option>
-					<option value="Y" @selected($config->mcpEnableJsonResponse ?? false)>비활성화</option>
+				<select name="mcpSSEEnable" id="mcpSSEEnable">
+					<option value="Y" @selected($config->mcpSSEEnable ?? false)>활성화</option>
+					<option value="N" @selected(!($config->mcpSSEEnable ?? false))>비활성화</option>
 				</select>
 				<p class="x_help-block">SSE(Server-Sent Events) 기능을 활성화합니다. 만일 가벼운 작업만 진행하며, 응답이 빨라 비동기 기능이 필요없는 경우 비활성화할 수 있습니다. (기본값: 활성화)</p>
 			</div>

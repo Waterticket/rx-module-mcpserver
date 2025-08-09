@@ -42,7 +42,7 @@ class Run extends Base
             host: $config->serverHost,
             port: $config->serverPort,
             mcpPath: $config->mcpPath,
-            enableJsonResponse: $config->mcpEnableJsonResponse,
+            enableJsonResponse: !$config->mcpSSEEnable,
             stateless: $config->mcpStateless
         );
 

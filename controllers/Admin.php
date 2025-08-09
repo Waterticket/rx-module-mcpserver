@@ -44,6 +44,16 @@ class Admin extends Base
 		$this->setTemplateFile('config');
 	}
 
+	public function dispMcpserverAdminConfigManual()
+	{
+		$config = ConfigModel::getConfig();
+		Context::set('config', $config);
+
+		Context::set('run_script_path', __DIR__ . '/Run.php');
+		// 관리자 설정 매뉴얼 화면
+		$this->setTemplateFile('config_manual');
+	}
+
 	/**
 	 * 관리자 설정 저장 액션
 	 */
@@ -80,7 +90,7 @@ class Admin extends Base
 		}
 
 		// MCP 옵션 설정
-		$config->mcpEnableJsonResponse = ($vars->mcpEnableJsonResponse === 'Y');
+		$config->mcpSSEEnable = ($vars->mcpSSEEnable === 'Y');
 		$config->mcpStateless = ($vars->mcpStateless === 'Y');
 
 		// 로그 설정
