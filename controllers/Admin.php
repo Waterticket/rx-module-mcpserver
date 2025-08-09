@@ -86,7 +86,7 @@ class Admin extends Base
 		}
 		if (isset($vars->mcpPath) && trim($vars->mcpPath))
 		{
-			$config->mcpPath = trim($vars->mcpPath);
+			$config->mcpPath = '/' . ltrim($vars->mcpPath, '/');
 		}
 
 		// MCP 옵션 설정

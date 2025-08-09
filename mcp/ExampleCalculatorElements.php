@@ -1,9 +1,18 @@
 <?php
 
+namespace Rhymix\Modules\Mcpserver\Mcp;
+
 use Rhymix\Modules\Mcpserver\Models\MCPServerInterface;
 use PhpMcp\Server\Attributes\McpTool;
 use PhpMcp\Server\Attributes\Schema;
 
+/**
+ * ExampleCalculatorElements
+ * 
+ * This class provides example MCP tools for basic calculations.
+ * 
+ * @package Rhymix\Modules\Mcpserver\Mcp
+ */
 class ExampleCalculatorElements extends MCPServerInterface
 {
     /**

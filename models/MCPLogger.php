@@ -70,29 +70,15 @@ class MCPLogger implements LoggerInterface
         }
 
         $timestamp = date('Y-m-d H:i:s');
-        $interpolated = $this->interpolate((string)$message, $context);
+        $contextString = !empty($context) ? json_encode($context, JSON_UNESCAPED_UNICODE) : '';
 
         // CLI 환경이면 STDOUT으로 출력
         if (php_sapi_name() === 'cli') {
-            fwrite(STDOUT, "[$timestamp] [$level] $interpolated" . PHP_EOL);
+            fwrite(STDOUT, "[$timestamp] [$level] $message $contextString" . PHP_EOL);
         } else {
             // 웹 환경일 경우 error_log() 사용
-            error_log("[$timestamp] [$level] $interpolated");
+            error_log("[$timestamp] [$level] $message $contextString");
         }
-    }
-
-    /**
-     * 메시지 안의 {placeholder}를 context 값으로 치환
-     */
-    private function interpolate(string $message, array $context = []): string
-    {
-        $replace = [];
-        foreach ($context as $key => $val) {
-            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
-                $replace['{' . $key . '}'] = $val;
-            }
-        }
-        return strtr($message, $replace);
     }
 
     public static function getInstance(object $config): MCPLogger

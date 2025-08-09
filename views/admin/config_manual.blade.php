@@ -42,8 +42,8 @@ WantedBy=multi-user.target</code></pre>
 					 아래의 명령을 실행하고, 정상 작동하는지 모니터링하십시오. 
 				</p>
 				<pre><code>systemctl daemon-reload
-systemctl start rhymix-mcpserver
-systemctl enable rhymix-mcpserver</code></pre>
+systemctl start rhymix-mcpserver.service
+systemctl enable rhymix-mcpserver.service</code></pre>
 			</div>
 		</div>
 	</section>

@@ -39,6 +39,10 @@
 
 	<section class="section">
 		<h1>서버 연결 설정</h1>
+
+		<div class="x_alert x_alert-warning">
+			<p>본 설정 변경 후에는 설정 매뉴얼에 따라 모든 파라메터가 정상 세팅되어있는지 반드시 확인해주세요.</p>
+		</div>
 		
 		<div class="x_control-group">
 			<label class="x_control-label" for="serverHost">서버 호스트</label>

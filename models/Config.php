@@ -36,7 +36,7 @@ class Config
 		{
 			self::$_cache = ModuleModel::getModuleConfig('mcpserver') ?: new \stdClass;
 
-			if (!isset(self::$_cache->serverName)) self::$_cache->serverName = 'MCP Server';
+			if (!isset(self::$_cache->serverName)) self::$_cache->serverName = 'Rhymix MCP Server';
 			if (!isset(self::$_cache->serverVersion)) self::$_cache->serverVersion = '1.0.0';
 
 			if (!isset(self::$_cache->serverHost)) self::$_cache->serverHost = '127.0.0.1';
