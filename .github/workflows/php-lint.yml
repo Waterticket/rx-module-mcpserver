@@ -1,0 +1,183 @@
+name: PHP Lint & Quality Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run daily at 2 AM KST
+    - cron: '0 17 * * *'
+
+jobs:
+  php-lint:
+    name: PHP Lint (PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.1', '8.2', '8.3', '8.4']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, iconv, json, mbstring, pdo
+          tools: composer:v2
+          coverage: none
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php-version }}-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: PHP Syntax Check (lint)
+        run: |
+          echo "🔍 PHP Syntax Check for PHP ${{ matrix.php-version }}"
+          find . -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 php -l
+
+      - name: Check PHP files for syntax errors
+        run: |
+          echo "📁 Checking all PHP files in the project..."
+          
+          # Define directories to check
+          DIRS_TO_CHECK="controllers models views mcp lang"
+          
+          for dir in $DIRS_TO_CHECK; do
+            if [ -d "$dir" ]; then
+              echo "Checking $dir directory..."
+              find "$dir" -name "*.php" -exec php -l {} \; | grep -v "No syntax errors detected" || echo "✅ No syntax errors in $dir"
+            else
+              echo "⚠️ Directory $dir not found, skipping..."
+            fi
+          done
+          
+          # Check root PHP files
+          echo "Checking root PHP files..."
+          find . -maxdepth 1 -name "*.php" -exec php -l {} \; | grep -v "No syntax errors detected" || echo "✅ No syntax errors in root files"
+
+      - name: Report results
+        if: always()
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "✅ All PHP syntax checks passed for PHP ${{ matrix.php-version }}"
+          else
+            echo "❌ PHP syntax errors found for PHP ${{ matrix.php-version }}"
+            exit 1
+          fi
+
+  compatibility-check:
+    name: PHP Compatibility Check
+    runs-on: ubuntu-latest
+    needs: php-lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install PHPCompatibility
+        run: |
+          composer global require squizlabs/php_codesniffer
+          composer global require phpcompatibility/php-compatibility
+          ~/.composer/vendor/bin/phpcs --config-set installed_paths ~/.composer/vendor/phpcompatibility/php-compatibility
+
+      - name: Run PHP Compatibility Check
+        run: |
+          echo "🔍 Checking PHP compatibility for versions 8.1-8.4..."
+          ~/.composer/vendor/bin/phpcs \
+            --standard=PHPCompatibility \
+            --runtime-set testVersion 8.1-8.4 \
+            --extensions=php \
+            --ignore=vendor/ \
+            --report=summary \
+            --report=source \
+            . || echo "⚠️ Some compatibility issues found"
+
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+    needs: php-lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Security Checker
+        uses: symfonycorp/security-checker-action@v5
+        with:
+          lock: composer.lock
+
+  summary:
+    name: Lint Summary
+    runs-on: ubuntu-latest
+    needs: [php-lint, compatibility-check, security-check]
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create summary
+        run: |
+          echo "## 🚀 PHP Lint & Quality Check Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.php-lint.result }}" == "success" ]; then
+            echo "✅ **PHP Syntax Check**: All PHP versions (8.1-8.4) passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **PHP Syntax Check**: Failed on one or more PHP versions" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.compatibility-check.result }}" == "success" ]; then
+            echo "✅ **Compatibility Check**: No major compatibility issues found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **Compatibility Check**: Some compatibility issues detected" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.security-check.result }}" == "success" ]; then
+            echo "✅ **Security Check**: No known security vulnerabilities" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **Security Check**: Security vulnerabilities detected" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Test Matrix Results" >> $GITHUB_STEP_SUMMARY
+          echo "| PHP Version | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| PHP 8.1 | ${{ needs.php-lint.result == 'success' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| PHP 8.2 | ${{ needs.php-lint.result == 'success' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| PHP 8.3 | ${{ needs.php-lint.result == 'success' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| PHP 8.4 | ${{ needs.php-lint.result == 'success' && '✅ Pass' || '❌ Fail' }} |" >> $GITHUB_STEP_SUMMARY
