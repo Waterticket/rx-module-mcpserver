@@ -1,24 +1,15 @@
 <?php return array(
     'root' => array(
-        'name' => '__root__',
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
-        'reference' => '393c847cee81c28233cf3985f5a4851d861931b0',
-        'type' => 'library',
+        'name' => 'rhymix/mcpserver',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '62c7249eba2a41ad6a44b91771670c9e0bbd4814',
+        'type' => 'rhymix-module',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        '__root__' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '393c847cee81c28233cf3985f5a4851d861931b0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'bordoni/phpass' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -199,6 +190,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'phpcompatibility/php-compatibility' => array(
+            'pretty_version' => '9.3.5',
+            'version' => '9.3.5.0',
+            'reference' => '9fb324479acf6f39452e0655d2429cc0d3914243',
+            'type' => 'phpcodesniffer-standard',
+            'install_path' => __DIR__ . '/../phpcompatibility/php-compatibility',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'phpdocumentor/reflection-common' => array(
             'pretty_version' => '2.2.0',
             'version' => '2.2.0.0',
@@ -360,6 +360,15 @@
             ),
             'dev_requirement' => false,
         ),
+        'rhymix/mcpserver' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '62c7249eba2a41ad6a44b91771670c9e0bbd4814',
+            'type' => 'rhymix-module',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'rmccue/requests' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -371,6 +380,15 @@
             'replaced' => array(
                 0 => '1.13.*',
             ),
+        ),
+        'squizlabs/php_codesniffer' => array(
+            'pretty_version' => '3.13.2',
+            'version' => '3.13.2.0',
+            'reference' => '5b5e3821314f947dd040c70f7992a64eac89025c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../squizlabs/php_codesniffer',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'swiftmailer/swiftmailer' => array(
             'dev_requirement' => false,
