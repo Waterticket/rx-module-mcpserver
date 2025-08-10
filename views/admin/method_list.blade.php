@@ -1,12 +1,12 @@
 @include('header')
 
 <div class="admin-content">
-  <h2>MCP 메서드 목록</h2>
+  <h2>{{ $lang->mcpserver_method_list_title }}</h2>
   
   <div class="server-restart-notice">
     <div class="notice-icon">⚠️</div>
     <div class="notice-content">
-      <strong>중요 안내:</strong> 메서드를 수정한 후에는 서버를 재시작해야 변경사항이 반영됩니다.
+      <strong>{{ $lang->mcpserver_restart_notice }}</strong>
     </div>
   </div>
 
@@ -14,7 +14,7 @@
     
     @if(!empty($tools))
       <div class="method-section">
-        <h3 class="section-title">도구 (Tools)</h3>
+        <h3 class="section-title">{{ $lang->mcpserver_section_tools }}</h3>
         <div class="method-list">
           @foreach($tools as $name => $info)
             <div class="method-item" onclick="toggleDetails('tool-{{ $loop->index }}')">
@@ -29,23 +29,23 @@
                 <div class="method-description">{{ $info['tool']->description }}</div>
               @endif
               <div class="method-details">
-                <span class="detail-item">핸들러: {{ is_string($info['handler']) ? $info['handler'] : (is_array($info['handler']) ? implode('::', $info['handler']) : 'Callable') }}</span>
+                <span class="detail-item">{{ $lang->mcpserver_handler }}: {{ is_string($info['handler']) ? $info['handler'] : (is_array($info['handler']) ? implode('::', $info['handler']) : 'Callable') }}</span>
                 @if($info['isManual'])
-                  <span class="detail-item manual">수동</span>
+                  <span class="detail-item manual">{{ $lang->mcpserver_manual }}</span>
                 @endif
               </div>
               <div class="method-details-extended" id="tool-{{ $loop->index }}" style="display: none;">
                 <div class="detail-section">
-                  <h4>상세 정보</h4>
+                  <h4>{{ $lang->mcpserver_detail_info }}</h4>
                   <div class="detail-content">
-                    <p><strong>이름:</strong> {{ $name }}</p>
+                    <p><strong>{{ $lang->mcpserver_name }}:</strong> {{ $name }}</p>
                     @if(isset($info['tool']->description))
-                      <p><strong>설명:</strong> {{ $info['tool']->description }}</p>
+                      <p><strong>{{ $lang->mcpserver_description }}:</strong> {{ $info['tool']->description }}</p>
                     @endif
-                    <p><strong>핸들러 타입:</strong> {{ is_string($info['handler']) ? '문자열' : (is_array($info['handler']) ? '배열' : '콜러블') }}</p>
-                    <p><strong>수동 모드:</strong> {{ $info['isManual'] ? '예' : '아니오' }}</p>
+                    <p><strong>{{ $lang->mcpserver_handler_type }}:</strong> {{ is_string($info['handler']) ? $lang->mcpserver_handler_type_string : (is_array($info['handler']) ? $lang->mcpserver_handler_type_array : $lang->mcpserver_handler_type_callable) }}</p>
+                    <p><strong>{{ $lang->mcpserver_manual_mode }}:</strong> {{ $info['isManual'] ? $lang->mcpserver_yes : $lang->mcpserver_no }}</p>
                     @if(isset($info['tool']->inputSchema))
-                      <p><strong>입력 스키마:</strong></p>
+                      <p><strong>{{ $lang->mcpserver_input_schema }}:</strong></p>
                       <pre class="json-display">{!! json_encode($info['tool']->inputSchema, JSON_PRETTY_PRINT) !!}</pre>
                     @endif
                   </div>
@@ -59,7 +59,7 @@
 
     @if(!empty($resources))
       <div class="method-section">
-        <h3 class="section-title">리소스 (Resources)</h3>
+        <h3 class="section-title">{{ $lang->mcpserver_section_resources }}</h3>
         <div class="method-list">
           @foreach($resources as $name => $info)
             <div class="method-item" onclick="toggleDetails('resource-{{ $loop->index }}')">
@@ -74,27 +74,27 @@
                 <div class="method-description">{{ $info['resource']->description }}</div>
               @endif
               <div class="method-details">
-                <span class="detail-item">핸들러: {{ is_string($info['handler']) ? $info['handler'] : (is_array($info['handler']) ? implode('::', $info['handler']) : 'Callable') }}</span>
+                <span class="detail-item">{{ $lang->mcpserver_handler }}: {{ is_string($info['handler']) ? $info['handler'] : (is_array($info['handler']) ? implode('::', $info['handler']) : 'Callable') }}</span>
                 @if($info['isManual'])
-                  <span class="detail-item manual">수동</span>
+                  <span class="detail-item manual">{{ $lang->mcpserver_manual }}</span>
                 @endif
               </div>
               <div class="method-details-extended" id="resource-{{ $loop->index }}" style="display: none;">
                 <div class="detail-section">
-                  <h4>상세 정보</h4>
+                  <h4>{{ $lang->mcpserver_detail_info }}</h4>
                   <div class="detail-content">
-                    <p><strong>이름:</strong> {{ $name }}</p>
+                    <p><strong>{{ $lang->mcpserver_name }}:</strong> {{ $name }}</p>
                     @if(isset($info['resource']->description))
                       <p><strong>설명:</strong> {{ $info['resource']->description }}</p>
                     @endif
                     @if(isset($info['resource']->uri))
-                      <p><strong>URI:</strong> {{ $info['resource']->uri }}</p>
+                      <p><strong>{{ $lang->mcpserver_uri }}:</strong> {{ $info['resource']->uri }}</p>
                     @endif
                     @if(isset($info['resource']->mimeType))
-                      <p><strong>MIME 타입:</strong> {{ $info['resource']->mimeType }}</p>
+                      <p><strong>{{ $lang->mcpserver_mime_type }}:</strong> {{ $info['resource']->mimeType }}</p>
                     @endif
-                    <p><strong>핸들러 타입:</strong> {{ is_string($info['handler']) ? '문자열' : (is_array($info['handler']) ? '배열' : '콜러블') }}</p>
-                    <p><strong>수동 모드:</strong> {{ $info['isManual'] ? '예' : '아니오' }}</p>
+                    <p><strong>{{ $lang->mcpserver_handler_type }}:</strong> {{ is_string($info['handler']) ? $lang->mcpserver_handler_type_string : (is_array($info['handler']) ? $lang->mcpserver_handler_type_array : $lang->mcpserver_handler_type_callable) }}</p>
+                    <p><strong>{{ $lang->mcpserver_manual_mode }}:</strong> {{ $info['isManual'] ? $lang->mcpserver_yes : $lang->mcpserver_no }}</p>
                   </div>
                 </div>
               </div>
@@ -106,7 +106,7 @@
 
     @if(!empty($resourceTemplates))
       <div class="method-section">
-        <h3 class="section-title">리소스 템플릿 (Resource Templates)</h3>
+        <h3 class="section-title">{{ $lang->mcpserver_section_resource_templates }}</h3>
         <div class="method-list">
           @foreach($resourceTemplates as $name => $info)
             <div class="method-item" onclick="toggleDetails('template-{{ $loop->index }}')">
@@ -121,33 +121,33 @@
                 <div class="method-description">{{ $info['template']->description }}</div>
               @endif
               <div class="method-details">
-                <span class="detail-item">핸들러: {{ is_string($info['handler']) ? $info['handler'] : (is_array($info['handler']) ? implode('::', $info['handler']) : 'Callable') }}</span>
+                <span class="detail-item">{{ $lang->mcpserver_handler }}: {{ is_string($info['handler']) ? $info['handler'] : (is_array($info['handler']) ? implode('::', $info['handler']) : 'Callable') }}</span>
                 @if(!empty($info['completionProviders']))
-                  <span class="detail-item">완성 제공자: {{ count($info['completionProviders']) }}개</span>
+                  <span class="detail-item">{{ $lang->mcpserver_completion_providers }}: {{ count($info['completionProviders']) }}개</span>
                 @endif
                 @if($info['isManual'])
-                  <span class="detail-item manual">수동</span>
+                  <span class="detail-item manual">{{ $lang->mcpserver_manual }}</span>
                 @endif
               </div>
               <div class="method-details-extended" id="template-{{ $loop->index }}" style="display: none;">
                 <div class="detail-section">
-                  <h4>상세 정보</h4>
+                  <h4>{{ $lang->mcpserver_detail_info }}</h4>
                   <div class="detail-content">
-                    <p><strong>이름:</strong> {{ $name }}</p>
+                    <p><strong>{{ $lang->mcpserver_name }}:</strong> {{ $name }}</p>
                     @if(isset($info['template']->description))
                       <p><strong>설명:</strong> {{ $info['template']->description }}</p>
                     @endif
                     @if(isset($info['template']->uriTemplate))
-                      <p><strong>URI 템플릿:</strong> {{ $info['template']->uriTemplate }}</p>
+                      <p><strong>{{ $lang->mcpserver_uri_template }}:</strong> {{ $info['template']->uriTemplate }}</p>
                     @endif
                     @if(isset($info['template']->mimeType))
                       <p><strong>MIME 타입:</strong> {{ $info['template']->mimeType }}</p>
                     @endif
-                    <p><strong>핸들러 타입:</strong> {{ is_string($info['handler']) ? '문자열' : (is_array($info['handler']) ? '배열' : '콜러블') }}</p>
-                    <p><strong>완성 제공자:</strong> {{ count($info['completionProviders']) }}개</p>
-                    <p><strong>수동 모드:</strong> {{ $info['isManual'] ? '예' : '아니오' }}</p>
+                    <p><strong>{{ $lang->mcpserver_handler_type }}:</strong> {{ is_string($info['handler']) ? $lang->mcpserver_handler_type_string : (is_array($info['handler']) ? $lang->mcpserver_handler_type_array : $lang->mcpserver_handler_type_callable) }}</p>
+                    <p><strong>{{ $lang->mcpserver_completion_providers }}:</strong> {{ count($info['completionProviders']) }}개</p>
+                    <p><strong>{{ $lang->mcpserver_manual_mode }}:</strong> {{ $info['isManual'] ? $lang->mcpserver_yes : $lang->mcpserver_no }}</p>
                     @if(!empty($info['completionProviders']))
-                      <p><strong>완성 제공자 목록:</strong></p>
+                      <p><strong>{{ $lang->mcpserver_completion_providers_list }}:</strong></p>
                       <ul class="completion-providers">
                         @foreach($info['completionProviders'] as $provider)
                           <li>{{ is_string($provider) ? $provider : (is_array($provider) ? implode('::', $provider) : 'Callable') }}</li>
@@ -165,7 +165,7 @@
 
     @if(!empty($prompts))
       <div class="method-section">
-        <h3 class="section-title">프롬프트 (Prompts)</h3>
+        <h3 class="section-title">{{ $lang->mcpserver_section_prompts }}</h3>
         <div class="method-list">
           @foreach($prompts as $name => $info)
             <div class="method-item" onclick="toggleDetails('prompt-{{ $loop->index }}')">
@@ -180,31 +180,31 @@
                 <div class="method-description">{{ $info['prompt']->description }}</div>
               @endif
               <div class="method-details">
-                <span class="detail-item">핸들러: {{ is_string($info['handler']) ? $info['handler'] : (is_array($info['handler']) ? implode('::', $info['handler']) : 'Callable') }}</span>
+                <span class="detail-item">{{ $lang->mcpserver_handler }}: {{ is_string($info['handler']) ? $info['handler'] : (is_array($info['handler']) ? implode('::', $info['handler']) : 'Callable') }}</span>
                 @if(!empty($info['completionProviders']))
-                  <span class="detail-item">완성 제공자: {{ count($info['completionProviders']) }}개</span>
+                  <span class="detail-item">{{ $lang->mcpserver_completion_providers }}: {{ count($info['completionProviders']) }}개</span>
                 @endif
                 @if($info['isManual'])
-                  <span class="detail-item manual">수동</span>
+                  <span class="detail-item manual">{{ $lang->mcpserver_manual }}</span>
                 @endif
               </div>
               <div class="method-details-extended" id="prompt-{{ $loop->index }}" style="display: none;">
                 <div class="detail-section">
-                  <h4>상세 정보</h4>
+                  <h4>{{ $lang->mcpserver_detail_info }}</h4>
                   <div class="detail-content">
-                    <p><strong>이름:</strong> {{ $name }}</p>
+                    <p><strong>{{ $lang->mcpserver_name }}:</strong> {{ $name }}</p>
                     @if(isset($info['prompt']->description))
                       <p><strong>설명:</strong> {{ $info['prompt']->description }}</p>
                     @endif
                     @if(isset($info['prompt']->arguments))
-                      <p><strong>인수:</strong></p>
+                      <p><strong>{{ $lang->mcpserver_arguments }}:</strong></p>
                       <pre class="json-display">{!! json_encode($info['prompt']->arguments, JSON_PRETTY_PRINT) !!}</pre>
                     @endif
-                    <p><strong>핸들러 타입:</strong> {{ is_string($info['handler']) ? '문자열' : (is_array($info['handler']) ? '배열' : '콜러블') }}</p>
-                    <p><strong>완성 제공자:</strong> {{ count($info['completionProviders']) }}개</p>
-                    <p><strong>수동 모드:</strong> {{ $info['isManual'] ? '예' : '아니오' }}</p>
+                    <p><strong>{{ $lang->mcpserver_handler_type }}:</strong> {{ is_string($info['handler']) ? $lang->mcpserver_handler_type_string : (is_array($info['handler']) ? $lang->mcpserver_handler_type_array : $lang->mcpserver_handler_type_callable) }}</p>
+                    <p><strong>{{ $lang->mcpserver_completion_providers }}:</strong> {{ count($info['completionProviders']) }}개</p>
+                    <p><strong>{{ $lang->mcpserver_manual_mode }}:</strong> {{ $info['isManual'] ? $lang->mcpserver_yes : $lang->mcpserver_no }}</p>
                     @if(!empty($info['completionProviders']))
-                      <p><strong>완성 제공자 목록:</strong></p>
+                      <p><strong>{{ $lang->mcpserver_completion_providers_list }}:</strong></p>
                       <ul class="completion-providers">
                         @foreach($info['completionProviders'] as $provider)
                           <li>{{ is_string($provider) ? $provider : (is_array($provider) ? implode('::', $provider) : 'Callable') }}</li>
@@ -222,7 +222,7 @@
 
   @else
     <div class="no-methods">
-      <p>등록된 MCP 메서드가 없습니다.</p>
+      <p>{{ $lang->mcpserver_no_methods }}</p>
     </div>
   @endif
 </div>

@@ -9,12 +9,12 @@
 
 <ul class="x_nav x_nav-tabs">
 	<li @class(['x_active' => $act === 'dispMcpserverAdminConfig'])>
-		<a href="@url(['module' => 'admin', 'act' => 'dispMcpserverAdminConfig'])">서버 설정</a>
+		<a href="@url(['module' => 'admin', 'act' => 'dispMcpserverAdminConfig'])">{{ $lang->mcpserver_nav_server_config }}</a>
 	</li>
     <li @class(['x_active' => $act === 'dispMcpserverAdminConfigManual'])>
-		<a href="@url(['module' => 'admin', 'act' => 'dispMcpserverAdminConfigManual'])">설정 매뉴얼</a>
+		<a href="@url(['module' => 'admin', 'act' => 'dispMcpserverAdminConfigManual'])">{{ $lang->mcpserver_nav_config_manual }}</a>
     </li>
 	<li @class(['x_active' => $act === 'dispMcpserverAdminMethodList'])>
-		<a href="@url(['module' => 'admin', 'act' => 'dispMcpserverAdminMethodList'])">메서드 목록</a>
+		<a href="@url(['module' => 'admin', 'act' => 'dispMcpserverAdminMethodList'])">{{ $lang->mcpserver_nav_method_list }}</a>
 	</li>
 </ul>

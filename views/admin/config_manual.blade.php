@@ -17,7 +17,7 @@
 	<input type="hidden" name="act" value="procMcpserverAdminInsertConfigManual" />
 
 	<section>
-		<h2>스크립트 설정 매뉴얼</h2>
+		<h2>{{ $lang->mcpserver_script_setup_manual }}</h2>
 
 		<div class="mcpserver-script-setup">
 			<ul class="mcpserver-tabs x_nav x_nav-tabs">
@@ -25,7 +25,7 @@
 			</ul>
 			<div class="mss-content systemd active">
 				<p class="mss-instruction">
-					<code>/etc/systemd/system/rhymix-mcpserver.service</code> 파일에 아래와 같은 내용을 넣습니다. 
+					<code>/etc/systemd/system/rhymix-mcpserver.service</code> {{ $lang->mcpserver_systemd_file_instruction }} 
 				</p>
 				<pre><code>[Unit]
 Description=Rhymix MCP Server Service
@@ -39,44 +39,44 @@ User={$user_info['name']}
 [Install]
 WantedBy=multi-user.target</code></pre>
 				<p class="mss-instruction">
-					 아래의 명령을 실행하고, 정상 작동하는지 모니터링하십시오. 
+					{{ $lang->mcpserver_systemd_run_instruction }} 
 				</p>
 				<pre><code>systemctl daemon-reload
 systemctl start rhymix-mcpserver.service
 systemctl enable rhymix-mcpserver.service</code></pre>
 
                 <p class="mss-instruction">
-                    서비스 상태를 확인하려면 다음 명령을 사용하세요:
+                    {{ $lang->mcpserver_systemd_status_instruction }}
                 </p>
                 <pre><code>systemctl status rhymix-mcpserver.service</code></pre>
 
                 <p class="mss-instruction">
-                    로그를 확인하려면 다음 명령을 사용하세요:
+                    {{ $lang->mcpserver_systemd_log_instruction }}
                 </p>
                 <pre><code>journalctl -u rhymix-mcpserver.service -f</code></pre>
 
                 <p class="mss-instruction">
-                    <a href="javascript:void(0);" class="x_btn x_btn-primary" id="testLocalConnection">서버 실행여부 테스트</a>
+                    <a href="javascript:void(0);" class="x_btn x_btn-primary" id="testLocalConnection">{{ $lang->mcpserver_test_server }}</a>
                 </p>
                 <script>
                     $('#testLocalConnection').on('click', function() {
-                        if (!confirm('서버가 실행중인지 확인하시겠습니까?')) {
+                        if (!confirm('{{ $lang->mcpserver_test_confirm }}')) {
                             return;
                         }
 
-                        $(this).prop('disabled', true).text('테스트 중...');
+                        $(this).prop('disabled', true).text('{{ $lang->mcpserver_testing }}');
 
                         $.post('./', {
                             module: 'mcpserver',
                             act: 'procMcpserverAdminTestLocalConnection'
                         }, function(response) {
                             if (response.error === 0) {
-                                alert('로컬 연결 테스트가 성공적으로 완료되었습니다.');
+                                alert('{{ $lang->mcpserver_test_success }}');
                             } else {
-                                alert('로컬 연결 테스트에 실패했습니다: ' + response.message);
+                                alert('{{ $lang->mcpserver_test_failed }}' + response.message);
                             }
 
-                            $('#testLocalConnection').prop('disabled', false).text('서버 실행여부 테스트');
+                            $('#testLocalConnection').prop('disabled', false).text('{{ $lang->mcpserver_test_server }}');
                         }, 'json');
                     });
                 </script>
@@ -85,7 +85,7 @@ systemctl enable rhymix-mcpserver.service</code></pre>
 	</section>
 
     <section>
-		<h2>서버 설정 매뉴얼</h2>
+		<h2>{{ $lang->mcpserver_server_setup_manual }}</h2>
 
 		<div class="mcpserver-script-setup">
 			<ul class="mcpserver-tabs x_nav x_nav-tabs">
@@ -93,8 +93,7 @@ systemctl enable rhymix-mcpserver.service</code></pre>
 			</ul>
 			<div class="mss-content nginx active">
 				<p class="mss-instruction">
-                    서버 외부에서 MCP 서버에 접속할 수 있도록 하기 위해,
-                    <code>nginx</code> 설정 파일에 아래와 같은 내용을 추가합니다.
+                    {!! $lang->mcpserver_nginx_instruction !!}
 				<pre><code>server {
     listen 443 ssl http2;
     server_name {!! parse_url(\Context::getRequestUri(), PHP_URL_HOST) !!};
@@ -124,12 +123,12 @@ systemctl enable rhymix-mcpserver.service</code></pre>
     ...
 }</code></pre>
 				<p class="mss-instruction">
-					 아래의 명령을 실행하고, 정상 작동하는지 모니터링하십시오. 
+					{{ $lang->mcpserver_systemd_run_instruction }} 
 				</p>
 				<pre><code>systemctl reload nginx</code></pre>
 
                 <p class="mss-instruction">
-                    <a href="{{ rtrim(\Context::getRequestUri(), '/') }}/{{ ltrim($config->mcpPath, '/') }}" target="_blank">외부접속 가능여부 확인</a>
+                    <a href="{{ rtrim(\Context::getRequestUri(), '/') }}/{{ ltrim($config->mcpPath, '/') }}" target="_blank">{{ $lang->mcpserver_external_access_check }}</a>
                 </p>
 			</div>
 		</div>
