@@ -181,7 +181,7 @@ class RhymixDatabaseTool extends MCPServerInterface
         $args->page = $page;
         $args->list_count = 10;
         
-        $output = executeQuery('document.getDocumentList', $args);
+        $output = executeQueryArray('document.getDocumentList', $args);
         
         if (!$output->toBool()) {
             throw new \Exception('게시물 목록을 가져올 수 없습니다: ' . $output->getMessage());
