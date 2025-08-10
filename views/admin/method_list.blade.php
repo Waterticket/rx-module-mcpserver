@@ -3,6 +3,13 @@
 <div class="admin-content">
   <h2>MCP 메서드 목록</h2>
   
+  <div class="server-restart-notice">
+    <div class="notice-icon">⚠️</div>
+    <div class="notice-content">
+      <strong>중요 안내:</strong> 메서드를 수정한 후에는 서버를 재시작해야 변경사항이 반영됩니다.
+    </div>
+  </div>
+
   @if(!empty($tools) || !empty($resources) || !empty($resourceTemplates) || !empty($prompts))
     
     @if(!empty($tools))
@@ -230,6 +237,33 @@
   border-bottom: 2px solid #007cba;
   padding-bottom: 10px;
   margin-bottom: 10px;
+}
+
+.server-restart-notice {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-left: 4px solid #f39c12;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notice-icon {
+  font-size: 1.2em;
+  flex-shrink: 0;
+}
+
+.notice-content {
+  color: #856404;
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
+.notice-content strong {
+  color: #664d03;
 }
 
 .method-section {
