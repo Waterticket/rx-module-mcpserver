@@ -15,6 +15,8 @@ use Rhymix\Modules\Mcpserver\Models\Config as ConfigModel;
  */
 class MethodValidator
 {
+    private static ?string $uniqueKey = null;
+
     public static function getDiscoverDirs(LoggerInterface $logger): array
     {
         $baseDir = realpath(__DIR__ . '/../../');
@@ -92,9 +94,11 @@ class MethodValidator
     protected static function getLockFileName(): string
     {
         $dir = \RX_BASEDIR . 'files/mcpserver/';
-        $token = ConfigModel::getConfig()->uniqueKey;
+        if (self::$uniqueKey === null) {
+            self::$uniqueKey = ConfigModel::getConfig()->uniqueKey;
+        }
 
-        return $dir . 'methods.' . $token . '.lock';
+        return $dir . 'methods.' . self::$uniqueKey . '.lock';
     }
 
     protected static function getLockFileValues(): array
