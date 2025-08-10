@@ -1,0 +1,157 @@
+name: PHP-MCP Server Update Notifications
+
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'composer.json'
+      - 'composer.lock'
+
+jobs:
+  notify-php-mcp-updates:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+        
+      - name: Check for php-mcp/server updates
+        id: check-update
+        run: |
+          # Check if this PR contains php-mcp/server updates
+          if git diff HEAD~1 HEAD -- composer.json composer.lock | grep -q "php-mcp/server"; then
+            echo "php_mcp_updated=true" >> $GITHUB_OUTPUT
+            
+            # Extract version information
+            OLD_VERSION=$(git show HEAD~1:composer.json | grep -o '"php-mcp/server": "[^"]*"' | cut -d'"' -f4 || echo "unknown")
+            NEW_VERSION=$(git show HEAD:composer.json | grep -o '"php-mcp/server": "[^"]*"' | cut -d'"' -f4 || echo "unknown")
+            
+            echo "old_version=${OLD_VERSION}" >> $GITHUB_OUTPUT
+            echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+          else
+            echo "php_mcp_updated=false" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Create Issue for php-mcp/server Update
+        if: steps.check-update.outputs.php_mcp_updated == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const oldVersion = '${{ steps.check-update.outputs.old_version }}';
+            const newVersion = '${{ steps.check-update.outputs.new_version }}';
+            
+            const title = `🚀 php-mcp/server 업데이트: ${oldVersion} → ${newVersion}`;
+            const body = `
+            ## php-mcp/server 새 버전 업데이트 알림
+            
+            \`php-mcp/server\` 패키지가 새 버전으로 업데이트되었습니다.
+            
+            ### 버전 정보
+            - **이전 버전**: \`${oldVersion}\`
+            - **새 버전**: \`${newVersion}\`
+            
+            ### 관련 Pull Request
+            - PR: #${{ github.event.number }}
+            - 제목: ${{ github.event.pull_request.title }}
+            - 링크: ${{ github.event.pull_request.html_url }}
+            
+            ### 확인 사항
+            - [ ] [릴리즈 노트](https://github.com/php-mcp/server/releases) 검토
+            - [ ] Breaking Changes 확인
+            - [ ] MCP Server 모듈과의 호환성 테스트
+            - [ ] 기존 MCP 툴들의 작동 확인
+            - [ ] 문서 업데이트 필요성 검토
+            - [ ] 예제 코드 업데이트 필요성 확인
+            
+            ### 테스트 체크리스트
+            - [ ] MCP 서버 시작/정지 테스트
+            - [ ] 기존 MCP 툴 호출 테스트
+            - [ ] 새로운 기능 테스트 (해당하는 경우)
+            - [ ] 에러 핸들링 테스트
+            
+            ### 참고 링크
+            - [php-mcp/server GitHub](https://github.com/php-mcp/server)
+            - [php-mcp/server 릴리즈](https://github.com/php-mcp/server/releases)
+            - [MCP 프로토콜 문서](https://modelcontextprotocol.io/)
+            
+            ---
+            _이 이슈는 Dependabot의 \`php-mcp/server\` 업데이트 감지 시 자동으로 생성됩니다._
+            `;
+            
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['dependencies', 'php-mcp-server', 'update-notification', 'auto-generated']
+            });
+            
+            console.log('Created issue:', issue.data.html_url);
+            
+      - name: Add comment to PR
+        if: steps.check-update.outputs.php_mcp_updated == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const oldVersion = '${{ steps.check-update.outputs.old_version }}';
+            const newVersion = '${{ steps.check-update.outputs.new_version }}';
+            
+            const comment = `🔔 **php-mcp/server 업데이트 감지!**
+            
+            \`${oldVersion}\` → \`${newVersion}\`
+            
+            관련 이슈가 자동으로 생성되었습니다. 업데이트 전에 다음 사항을 확인해 주세요:
+            
+            1. 📖 [릴리즈 노트](https://github.com/php-mcp/server/releases) 검토
+            2. ⚠️ Breaking Changes 확인
+            3. 🧪 호환성 테스트 수행
+            4. 📚 문서 업데이트 검토
+            
+            **중요**: 프로덕션 배포 전에 충분한 테스트를 수행해 주세요.`;
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+            
+      - name: Add release info comment
+        if: steps.check-update.outputs.php_mcp_updated == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const newVersion = '${{ steps.check-update.outputs.new_version }}';
+            
+            try {
+              // Try to fetch release information from php-mcp/server
+              const response = await fetch('https://api.github.com/repos/php-mcp/server/releases');
+              const releases = await response.json();
+              
+              // Find the latest release that matches the new version
+              const matchingRelease = releases.find(release => 
+                release.tag_name === newVersion || release.tag_name === 'v' + newVersion
+              );
+              
+              if (matchingRelease) {
+                const releaseComment = `📋 **릴리즈 정보**
+                
+                **${matchingRelease.name || matchingRelease.tag_name}**
+                
+                ${matchingRelease.body || '릴리즈 노트가 없습니다.'}
+                
+                🔗 [전체 릴리즈 노트 보기](${matchingRelease.html_url})`;
+                
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: releaseComment
+                });
+              }
+            } catch (error) {
+              console.log('Could not fetch release info:', error.message);
+            }

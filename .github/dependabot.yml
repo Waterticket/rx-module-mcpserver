@@ -1,0 +1,30 @@
+version: 2
+updates:
+  # Monitor php-mcp/server and other composer dependencies
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "09:00"
+      timezone: "Asia/Seoul"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "waterticket"
+    assignees:
+      - "waterticket"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "php-mcp-server"
+    # Specifically monitor php-mcp/server updates
+    allow:
+      - dependency-name: "php-mcp/server"
+        dependency-type: "direct"
+      - dependency-name: "php-mcp/*"
+        dependency-type: "all"
+      - dependency-name: "rhymix/*"
+        dependency-type: "all"
+    # Enable version updates
+    versioning-strategy: increase-if-necessary
