@@ -1,6 +1,270 @@
 # MCP Server for Rhymix
 
-## 개요
+[🇰🇷 한국어](#korean) | [🇺🇸 English](#english)
+
+---
+
+## English
+
+### Overview
+
+**MCP Server** is a Model Context Protocol (MCP) server module that can be applied to the Rhymix CMS. This module provides a standardized interface for AI clients to access Rhymix's data and functionality.
+
+This module is a program that ports [php-mcp/server](https://github.com/php-mcp/server) for use in Rhymix.  
+For MCP tool, prompt, and plugin development, you should refer to the above repository.
+
+> [!IMPORTANT]
+> This module requires advanced knowledge of servers and Rhymix during the installation process.  
+> When changing server settings, you must be aware of what you are doing and proceed accordingly.
+
+### What is Model Context Protocol (MCP)?
+
+MCP is an open standard protocol designed to allow AI assistants to securely connect to external tools and data sources. This allows AI clients to leverage the capabilities of various applications and services.
+
+### Key Features
+
+- ✨ **Standardized MCP Protocol** support
+- 🔧 **Extensible Tool System** - Users can develop their own MCP tools
+- 🔍 **Automatic Directory Scanning** - Automatically scans for MCP plugins from separate modules
+
+### Installation Requirements
+
+- PHP 8.1 or higher
+- Rhymix 2.1 or higher
+- Linux Shell access required
+
+### Installation Method
+
+1. Copy the module to the `modules/mcpserver` directory of Rhymix.
+2. Configure settings in **Advanced** > **Installed Modules** > **MCP Server**.
+
+### Configuration Options
+
+#### Server Settings
+- **Server Name**: MCP server identifier
+- **Server Version**: Version information
+- **Host**: IP address the server will bind to (default: 127.0.0.1)
+- **Port**: Port the server will use (default: 8080)
+- **MCP Path**: MCP endpoint path (default: /mcp)
+
+#### Communication Settings
+- **Enable SSE**: Whether to use Server-Sent Events
+- **Stateless Mode**: Whether to enable stateless mode
+
+#### Logging Settings
+- **Log Output**: Enable console log output
+- **Log Level**: Select log level to output (DEBUG, INFO, WARNING, ERROR, etc.)
+
+### Running MCP Server
+
+This module requires running a server separate from Rhymix.  
+Refer to **Module > Configuration Manual** to run the script and make necessary reverse proxy configuration changes in server programs like nginx.
+
+### Developing Custom MCP Tools
+
+#### Basic Structure
+
+Custom MCP tools are created in the `modules/(any module)/mcp/` directory. All MCP tool classes must inherit from `\Rhymix\Modules\Mcpserver\Models\MCPServerInterface`.
+
+#### Example: Calculator Tool (ExampleCalculatorElements.php)
+
+```php
+<?php
+
+namespace Rhymix\Modules\Mcpserver\Mcp;
+
+use Rhymix\Modules\Mcpserver\Models\MCPServerInterface;
+use PhpMcp\Server\Attributes\McpTool;
+use PhpMcp\Server\Attributes\Schema;
+
+/**
+ * Example MCP tool providing calculator functionality
+ */
+class ExampleCalculatorElements extends MCPServerInterface
+{
+    /**
+     * Adds two numbers.
+     * 
+     * @param int $a First number
+     * @param int $b Second number  
+     * @return int Sum of two numbers
+     */
+    #[McpTool(name: 'add_numbers')]
+    public function add(int $a, int $b): int
+    {
+        return $a + $b;
+    }
+
+    /**
+     * Calculates power with validation.
+     */
+    #[McpTool(name: 'calculate_power')]
+    public function power(
+        #[Schema(type: 'number', minimum: 0, maximum: 1000)]
+        float $base,
+        
+        #[Schema(type: 'integer', minimum: 0, maximum: 10)]
+        int $exponent
+    ): float {
+        return pow($base, $exponent);
+    }
+}
+```
+
+#### Creating New MCP Tool Classes
+
+1. **Create File**: Create a new PHP file (YourCustomTool.php) in the `modules/example/mcp/` directory.
+
+2. **Basic Class Structure**:
+```php
+<?php
+
+namespace Rhymix\Modules\Example\Mcp;
+
+use Rhymix\Modules\Mcpserver\Models\MCPServerInterface;
+use PhpMcp\Server\Attributes\McpTool;
+use PhpMcp\Server\Attributes\Schema;
+
+/**
+ * Custom MCP Tool
+ */
+class YourCustomTool extends MCPServerInterface
+{
+    /**
+     * Example tool method
+     */
+    #[McpTool(name: 'your_tool_name')]
+    public function yourMethod($param1, $param2)
+    {
+        // Implement business logic here
+        return "Result";
+    }
+}
+```
+
+#### Rhymix Database Access Example
+
+```php
+<?php
+
+namespace Rhymix\Modules\Example\Mcp;
+
+use Rhymix\Modules\Mcpserver\Models\MCPServerInterface;
+use PhpMcp\Server\Attributes\McpTool;
+
+class RhymixDatabaseTool extends MCPServerInterface
+{
+    /**
+     * Retrieves member information.
+     */
+    #[McpTool(name: 'get_member_info')]
+    public function getMemberInfo(int $member_srl): array
+    {
+        // Execute Rhymix database query
+        $output = executeQuery('member.getMemberInfoByMemberSrl', ['member_srl' => $member_srl]);
+        
+        if (!$output->toBool()) {
+            throw new \Exception('Cannot get member info: ' . $output->getMessage());
+        }
+        
+        $member = $output->data;
+        return [
+            'member_srl' => $member->member_srl,
+            'user_id' => $member->user_id,
+            'nick_name' => $member->nick_name,
+            'email_address' => $member->email_address
+        ];
+    }
+
+    /**
+     * Retrieves document list.
+     */
+    #[McpTool(name: 'get_document_list')]
+    public function getDocumentList(int $module_srl, int $page = 1): array
+    {
+        $args = new \stdClass();
+        $args->module_srl = $module_srl;
+        $args->page = $page;
+        $args->list_count = 10;
+        
+        $output = executeQueryArray('document.getDocumentList', $args);
+        
+        if (!$output->toBool()) {
+            throw new \Exception('Cannot get document list: ' . $output->getMessage());
+        }
+        
+        return [
+            'total_count' => $output->total_count,
+            'documents' => $output->data
+        ];
+    }
+}
+```
+
+#### Schema Validation
+
+In MCP tools, you can set validation for input parameters using the `Schema` attribute:
+
+```php
+#[McpTool(name: 'validated_tool')]
+public function validatedMethod(
+    #[Schema(type: 'string', minLength: 1, maxLength: 100)]
+    string $text,
+    
+    #[Schema(type: 'integer', minimum: 1, maximum: 999)]
+    int $number,
+    
+    #[Schema(type: 'number', minimum: 0.0, maximum: 100.0)]
+    float $percentage
+): array {
+    return [
+        'text' => $text,
+        'number' => $number,
+        'percentage' => $percentage
+    ];
+}
+```
+
+For more information, please refer to [php-mcp/server](https://github.com/php-mcp/server).
+
+### Debugging
+
+#### Log Checking
+The MCP server outputs detailed logs according to configuration. Through logs, you can check:
+- Client connection/disconnection
+- Tool calls and responses
+- Error and exception information
+
+#### Connection Testing
+Use the "Local Connection Test" function on the admin page to verify that the MCP server is working properly.
+
+### Precautions
+
+- Use MCP server with appropriate firewall settings in security-critical environments.
+- It is recommended to disable DEBUG log level in production environments.
+- Perform appropriate permission checks when working with databases in custom tools.
+
+### License
+
+This module is distributed under the GPL v2 license.
+
+### Developer
+
+- **Waterticket** (waterticket@potatosoft.kr)
+- Website: https://potatosoft.kr
+- Module Generator: https://www.poesis.dev/
+
+### Technical Support
+
+If you encounter problems or need help:
+1. Ask questions in the [Rhymix Official Community](https://rhymix.org/qna)
+2. Register GitHub issues (if applicable)
+
+---
+
+## Korean
+
+### 개요
 
 **MCP Server**는 라이믹스(Rhymix) CMS에 적용할 수 있는 Model Context Protocol (MCP) 서버 모듈입니다. 이 모듈을 통해 AI 클라이언트가 라이믹스의 데이터와 기능에 접근할 수 있는 표준화된 인터페이스를 제공합니다.  
 
