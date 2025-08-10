@@ -3,7 +3,7 @@
         'name' => 'rhymix/mcpserver',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '62c7249eba2a41ad6a44b91771670c9e0bbd4814',
+        'reference' => '4b9971437716838893d9408a2ad0e2d2bee32bd2',
         'type' => 'rhymix-module',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -363,7 +363,7 @@
         'rhymix/mcpserver' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '62c7249eba2a41ad6a44b91771670c9e0bbd4814',
+            'reference' => '4b9971437716838893d9408a2ad0e2d2bee32bd2',
             'type' => 'rhymix-module',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
