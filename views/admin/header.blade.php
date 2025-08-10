@@ -7,6 +7,16 @@
 	<h1>{{ $lang->cmd_mcpserver }}</h1>
 </div>
 
+@if(isset($isMethodChangedAfterExecute) && $isMethodChangedAfterExecute)
+  <div class="method-changed-alert">
+    <div class="alert-icon">🔄</div>
+    <div class="alert-content">
+      <strong>{{ $lang->mcpserver_method_changed_title }}</strong>
+      <p>{{ $lang->mcpserver_method_changed_message }}</p>
+    </div>
+  </div>
+@endif
+
 <ul class="x_nav x_nav-tabs">
 	<li @class(['x_active' => $act === 'dispMcpserverAdminConfig'])>
 		<a href="@url(['module' => 'admin', 'act' => 'dispMcpserverAdminConfig'])">{{ $lang->mcpserver_nav_server_config }}</a>

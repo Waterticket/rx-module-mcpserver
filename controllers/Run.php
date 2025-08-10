@@ -8,7 +8,7 @@ use PhpMcp\Server\Transports\StreamableHttpServerTransport;
 use Rhymix\Modules\Mcpserver\Models\Config as ConfigModel;
 use Rhymix\Modules\Mcpserver\Models\MCPCache;
 use Rhymix\Modules\Mcpserver\Models\MCPLogger;
-use Rhymix\Modules\Mcpserver\Models\DirectoryScanner;
+use Rhymix\Modules\Mcpserver\Models\MethodValidator;
 
 if (PHP_SAPI === 'cli')
 {
@@ -32,11 +32,10 @@ class Run extends Base
             ->withCache($cache)
             ->build();
 
-        $baseDir = realpath(__DIR__ . '/../../');
-        $logger->info("Scanning for MCP directories in: $baseDir");
-        $paths = DirectoryScanner::scan($baseDir, '*/mcp');
-        $logger->info("Found MCP directories: " . implode(', ', $paths));
+        [$baseDir, $paths] = MethodValidator::getDiscoverDirs($logger);
         $server->discover($baseDir, $paths);
+
+        MethodValidator::updateLockFile(); // Update the lock file with current method hashes
 
         $transport = new StreamableHttpServerTransport(
             host: $config->serverHost,

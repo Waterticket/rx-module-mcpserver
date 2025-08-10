@@ -11,12 +11,7 @@ use Rhymix\Modules\Mcpserver\Models\Config as ConfigModel;
 use BaseObject;
 use Context;
 use Psr\Log\LogLevel;
-use PhpMcp\Server\Utils\Discoverer;
-use Rhymix\Modules\Mcpserver\Models\{
-	DummyRegistry,
-	DummyLogger,
-	DirectoryScanner,
-};
+use Rhymix\Modules\Mcpserver\Models\MethodValidator;
 
 /**
  * MCP Server
@@ -34,6 +29,9 @@ class Admin extends Base
 	{
 		// 관리자 화면 템플릿 경로 지정
 		$this->setTemplatePath($this->module_path . 'views/admin/');
+
+		$isMethodChangedAfterExecute = MethodValidator::isMethodChangedAfterExecute();
+		Context::set('isMethodChangedAfterExecute', $isMethodChangedAfterExecute);
 	}
 
 	/**
@@ -135,19 +133,7 @@ class Admin extends Base
 		// Context에 세팅
 		Context::set('config', $config);
 
-		$logger = new DummyLogger();
-		$registry = new DummyRegistry($logger);
-
-		$discoverer = new Discoverer(
-			$registry,
-			$logger,
-		);
-
-		$baseDir = realpath(__DIR__ . '/../../');
-		debugPrint("Scanning for MCP directories in: $baseDir");
-		$paths = DirectoryScanner::scan($baseDir, '*/mcp');
-		debugPrint("Found MCP directories: " . implode(', ', $paths));
-		$discoverer->discover($baseDir, $paths);
+		$registry = MethodValidator::getMethods();
 
 		Context::set('tools', $registry->tools);
 		Context::set('resources', $registry->resources);

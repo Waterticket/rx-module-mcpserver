@@ -31,6 +31,8 @@ $lang->mcpserver_completion_providers_list = '완성 제공자 목록';
 $lang->mcpserver_yes = '예';
 $lang->mcpserver_no = '아니오';
 $lang->mcpserver_no_methods = '등록된 MCP 메서드가 없습니다.';
+$lang->mcpserver_method_changed_title = '메서드가 변경되었습니다!';
+$lang->mcpserver_method_changed_message = '서버 재시작 후 메서드가 변경되어 서버 재시작이 필요합니다.';
 
 // Config page
 $lang->mcpserver_config_description = '본 모듈은 <a href="https://github.com/php-mcp/server" target="_blank">PHP MCP Server</a> 라이브러리를 기반으로 하며, Model Context Protocol(MCP)을 구현합니다.';

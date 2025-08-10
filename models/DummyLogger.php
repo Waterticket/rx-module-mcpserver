@@ -49,6 +49,7 @@ class DummyLogger implements LoggerInterface
 
     public function log($level, $message, array $context = []): void
     {
+        debugPrint("[$level] $message");
         return;
     }
 }

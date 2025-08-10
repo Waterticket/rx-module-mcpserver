@@ -266,6 +266,33 @@
   color: #664d03;
 }
 
+.method-changed-notice {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-left: 4px solid #dc3545;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 15px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.method-changed-notice .notice-content {
+  color: #721c24;
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
+.method-changed-notice .notice-content strong {
+  color: #491217;
+}
+
+.method-changed-notice .notice-content p {
+  margin: 5px 0 0 0;
+  font-weight: normal;
+}
+
 .method-section {
   margin-bottom: 40px;
 }

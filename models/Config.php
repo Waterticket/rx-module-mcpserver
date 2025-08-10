@@ -36,6 +36,11 @@ class Config
 		{
 			self::$_cache = ModuleModel::getModuleConfig('mcpserver') ?: new \stdClass;
 
+			if (!isset(self::$_cache->uniqueKey)) {
+				self::$_cache->uniqueKey = \Rhymix\Framework\Security::getRandomUUID();
+				self::setConfig(self::$_cache); // Save the unique key if it was not set
+			}
+
 			if (!isset(self::$_cache->serverName)) self::$_cache->serverName = 'Rhymix MCP Server';
 			if (!isset(self::$_cache->serverVersion)) self::$_cache->serverVersion = '1.0.0';
 

@@ -1,3 +1,38 @@
+.method-changed-alert {
+	background: #f8d7da;
+	border: 1px solid #f5c6cb;
+	border-left: 4px solid #dc3545;
+	border-radius: 6px;
+	padding: 12px;
+	margin: 15px 0;
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+	.alert-icon {
+		font-size: 1.2em;
+		flex-shrink: 0;
+	}
+
+	.alert-content {
+		color: #721c24;
+		font-size: 0.95em;
+		line-height: 1.4;
+
+		strong {
+			color: #491217;
+			display: block;
+			margin-bottom: 4px;
+		}
+
+		p {
+			margin: 0;
+			font-weight: normal;
+		}
+	}
+}
+
 .mcpserver-script-setup {
 	.mss-content {
 		display: none;

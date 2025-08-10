@@ -31,6 +31,8 @@ $lang->mcpserver_completion_providers_list = 'Completion Provider List';
 $lang->mcpserver_yes = 'Yes';
 $lang->mcpserver_no = 'No';
 $lang->mcpserver_no_methods = 'No MCP methods registered.';
+$lang->mcpserver_method_changed_title = 'Methods have changed!';
+$lang->mcpserver_method_changed_message = 'Methods have been modified after server restart, server restart is required.';
 
 // Config page
 $lang->mcpserver_config_description = 'This module is based on the <a href="https://github.com/php-mcp/server" target="_blank">PHP MCP Server</a> library and implements the Model Context Protocol (MCP).';
