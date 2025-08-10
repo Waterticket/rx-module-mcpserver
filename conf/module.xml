@@ -8,6 +8,7 @@
 		<action name="procMcpserverAdminInsertConfig" class="Controllers\Admin" />
 		<action name="dispMcpserverAdminConfigManual" class="Controllers\Admin" />
 		<action name="procMcpserverAdminTestLocalConnection" class="Controllers\Admin" />
+		<action name="dispMcpserverAdminMethodList" class="Controllers\Admin" />
 	</actions>
 	<!-- 이벤트 핸들러 (트리거) 선언 -->
 	<eventHandlers>

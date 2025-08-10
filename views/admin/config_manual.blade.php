@@ -93,8 +93,8 @@ systemctl enable rhymix-mcpserver.service</code></pre>
 			</ul>
 			<div class="mss-content nginx active">
 				<p class="mss-instruction">
-					라이믹스를 구동하는 conf 파일에 아래와 같은 내용을 넣습니다. 
-				</p>
+                    서버 외부에서 MCP 서버에 접속할 수 있도록 하기 위해,
+                    <code>nginx</code> 설정 파일에 아래와 같은 내용을 추가합니다.
 				<pre><code>server {
     listen 443 ssl http2;
     server_name {!! parse_url(\Context::getRequestUri(), PHP_URL_HOST) !!};

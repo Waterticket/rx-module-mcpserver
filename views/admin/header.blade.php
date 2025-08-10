@@ -14,4 +14,7 @@
     <li @class(['x_active' => $act === 'dispMcpserverAdminConfigManual'])>
 		<a href="@url(['module' => 'admin', 'act' => 'dispMcpserverAdminConfigManual'])">설정 매뉴얼</a>
     </li>
+	<li @class(['x_active' => $act === 'dispMcpserverAdminMethodList'])>
+		<a href="@url(['module' => 'admin', 'act' => 'dispMcpserverAdminMethodList'])">메서드 목록</a>
+	</li>
 </ul>

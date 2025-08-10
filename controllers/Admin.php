@@ -11,6 +11,12 @@ use Rhymix\Modules\Mcpserver\Models\Config as ConfigModel;
 use BaseObject;
 use Context;
 use Psr\Log\LogLevel;
+use PhpMcp\Server\Utils\Discoverer;
+use Rhymix\Modules\Mcpserver\Models\{
+	DummyRegistry,
+	DummyLogger,
+	DirectoryScanner,
+};
 
 /**
  * MCP Server
@@ -119,6 +125,37 @@ class Admin extends Base
 		// 설정 화면으로 리다이렉트
 		$this->setMessage('success_registed');
 		$this->setRedirectUrl(Context::get('success_return_url'));
+	}
+
+	public function dispMcpserverAdminMethodList()
+	{
+		// 현재 설정 상태 불러오기
+		$config = ConfigModel::getConfig();
+
+		// Context에 세팅
+		Context::set('config', $config);
+
+		$logger = new DummyLogger();
+		$registry = new DummyRegistry($logger);
+
+		$discoverer = new Discoverer(
+			$registry,
+			$logger,
+		);
+
+		$baseDir = realpath(__DIR__ . '/../../');
+		debugPrint("Scanning for MCP directories in: $baseDir");
+		$paths = DirectoryScanner::scan($baseDir, '*/mcp');
+		debugPrint("Found MCP directories: " . implode(', ', $paths));
+		$discoverer->discover($baseDir, $paths);
+
+		Context::set('tools', $registry->tools);
+		Context::set('resources', $registry->resources);
+		Context::set('resourceTemplates', $registry->resourceTemplates);
+		Context::set('prompts', $registry->prompts);
+
+		// 스킨 파일 지정
+		$this->setTemplateFile('method_list');
 	}
 
 	public function procMcpserverAdminTestLocalConnection()
