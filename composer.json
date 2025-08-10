@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "php": ">=8.1",
+    "php": ">=8.2",
     "rhymix/composer-stub": "dev-master",
     "php-mcp/server": "^3.3"
   },
@@ -28,6 +28,6 @@
   },
   "scripts": {
     "lint": "find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
-    "compat-check": "phpcs --standard=PHPCompatibility --runtime-set testVersion 8.1-8.4 --extensions=php --ignore=vendor/ ."
+    "compat-check": "phpcs --standard=PHPCompatibility --runtime-set testVersion 8.2-8.4 --extensions=php --ignore=vendor/ ."
   }
 }

@@ -29,7 +29,7 @@ MCP is an open standard protocol designed to allow AI assistants to securely con
 
 ### Installation Requirements
 
-- PHP 8.1 or higher
+- PHP 8.2 or higher
 - Rhymix 2.1 or higher
 - Linux Shell access required
 
@@ -287,7 +287,7 @@ MCP는 AI 어시스턴트가 외부 도구와 데이터 소스에 안전하게 �
 
 ## 설치 요구사항
 
-- PHP 8.1 이상
+- PHP 8.2 이상
 - Rhymix 2.1 이상
 - Linux Shell 작업이 가능해야 함
 
