@@ -16,6 +16,7 @@ use Rhymix\Modules\Mcpserver\Models\Config as ConfigModel;
 class MethodValidator
 {
     private static ?string $uniqueKey = null;
+    private static ?bool $disableExampleMethods = null;
 
     public static function getDiscoverDirs(LoggerInterface $logger): array
     {
@@ -38,6 +39,16 @@ class MethodValidator
 		);
 
 		[$baseDir, $paths] = MethodValidator::getDiscoverDirs($logger);
+        if (self::$disableExampleMethods === null) {
+            self::$disableExampleMethods = ConfigModel::getConfig()->disableExampleMethods ?? false;
+        }
+
+        if (self::$disableExampleMethods) {
+            $paths = array_filter($paths, function ($path) {
+                return $path !== 'mcpserver/mcp';
+            });
+        }
+
 		$discoverer->discover($baseDir, $paths);
 
         $output = new \stdClass();

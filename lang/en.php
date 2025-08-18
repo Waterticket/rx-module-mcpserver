@@ -57,6 +57,8 @@ $lang->mcpserver_disable = 'Disable';
 $lang->mcpserver_sse_help = 'Enables SSE (Server-Sent Events) functionality. If you are only doing lightweight tasks and fast responses where asynchronous functionality is not needed, you can disable this. (Default: Enabled)';
 $lang->mcpserver_stateless_mode = 'Stateless Mode';
 $lang->mcpserver_stateless_help = 'Processes each request independently without session management. Enable when not using cache or memory-based sessions. (Performance improvement, memory saving)';
+$lang->mcpserver_disable_example_methods = 'Disable Example Methods';
+$lang->mcpserver_disable_example_methods_help = 'Disables default example methods. It is recommended to disable this in production environments for security reasons. (Default: No)';
 $lang->mcpserver_cache_warning = 'MCP session requires cache to be enabled. Currently, Rhymix cache is not configured. <a href="@url([\'module\'=>\'admin\',\'act\'=>\'dispAdminConfigAdvanced\'])" target="_blank">Enable cache</a> or activate Stateless mode.';
 $lang->mcpserver_section_log = 'Log Configuration';
 $lang->mcpserver_log_output = 'Log Output';

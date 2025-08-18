@@ -50,6 +50,7 @@ class Config
 
 			if (!isset(self::$_cache->mcpSSEEnable)) self::$_cache->mcpSSEEnable = true;
 			if (!isset(self::$_cache->mcpStateless)) self::$_cache->mcpStateless = false;
+			if (!isset(self::$_cache->disableExampleMethods)) self::$_cache->disableExampleMethods = false;
 
 			if (!isset(self::$_cache->printLog)) self::$_cache->printLog = true;
 			if (!isset(self::$_cache->printLogLevels)) {

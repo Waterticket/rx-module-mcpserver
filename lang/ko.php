@@ -57,6 +57,8 @@ $lang->mcpserver_disable = '비활성화';
 $lang->mcpserver_sse_help = 'SSE(Server-Sent Events) 기능을 활성화합니다. 만일 가벼운 작업만 진행하며, 응답이 빨라 비동기 기능이 필요없는 경우 비활성화할 수 있습니다. (기본값: 활성화)';
 $lang->mcpserver_stateless_mode = 'Stateless 모드';
 $lang->mcpserver_stateless_help = '세션 관리 없이 각 요청을 독립적으로 처리합니다. 캐시나 메모리 기반 세션을 사용하지 않을 때 활성화하세요. (성능 향상, 메모리 절약)';
+$lang->mcpserver_disable_example_methods = '예제 메서드 비활성화';
+$lang->mcpserver_disable_example_methods_help = '기본 예제 메서드를 비활성화합니다. 프로덕션 환경에서는 보안을 위해 비활성화하는 것이 좋습니다. (기본값: 아니오)';
 $lang->mcpserver_cache_warning = 'MCP session은 캐시가 활성화되어있어야 작동합니다. 현재 라이믹스 캐시가 설정되어있지 않습니다. <a href="@url([\'module\'=>\'admin\',\'act\'=>\'dispAdminConfigAdvanced\'])" target="_blank">캐시를 활성화하거나</a> Stateless 모드를 활성화하세요.';
 $lang->mcpserver_section_log = '로그 설정';
 $lang->mcpserver_log_output = '로그 출력';

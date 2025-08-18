@@ -97,6 +97,7 @@ class Admin extends Base
 		// MCP 옵션 설정
 		$config->mcpSSEEnable = ($vars->mcpSSEEnable === 'Y');
 		$config->mcpStateless = ($vars->mcpStateless === 'Y');
+		$config->disableExampleMethods = ($vars->disableExampleMethods === 'Y');
 
 		// 로그 설정
 		$config->printLog = ($vars->printLog === 'Y');

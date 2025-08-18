@@ -98,6 +98,17 @@
 				@endif
 			</div>
 		</div>
+
+		<div class="x_control-group">
+			<label class="x_control-label" for="disableExampleMethods">{{ $lang->mcpserver_disable_example_methods }}</label>
+			<div class="x_controls">
+				<select name="disableExampleMethods" id="disableExampleMethods">
+					<option value="Y" @selected($config->disableExampleMethods ?? false)>{{ $lang->cmd_yes }}</option>
+					<option value="N" @selected(!($config->disableExampleMethods ?? false))>{{ $lang->cmd_no }}</option>
+				</select>
+				<p class="x_help-block">{{ $lang->mcpserver_disable_example_methods_help }}</p>
+			</div>
+		</div>
 	</section>
 
 	<section class="section">
